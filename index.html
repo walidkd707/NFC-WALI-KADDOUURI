@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walid Kaddouri - Vision Tap</title>
+    <!-- Bibliothèque pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0B0B0B;
+            --bg-section: #111111;
+            --bg-card: #171717;
+            --primary-orange: #FF7A00;
+            --hover-orange: #FF8C1A;
+            --text-white: #FFFFFF;
+            --text-grey: #BDBDBD;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-white);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Container principal - Section */
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--bg-section);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        /* Emplacement Cover */
+        .cover-photo {
+            width: 100%;
+            height: 200px;
+            background-color: var(--bg-card);
+            /* Intégration de l'image de couverture */
+            background-image: url('SLIDE MOBILE.jpeg');
+            background-size: cover;
+            background-position: center;
+            border-bottom: 2px solid var(--primary-orange);
+        }
+
+        /* Emplacement Logo et Infos */
+        .profile-section {
+            text-align: center;
+            padding: 0 20px 20px;
+            margin-top: -60px;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--bg-main);
+            border: 3px solid var(--primary-orange);
+            /* Utilisation du logo demandé verbatim */
+            background-image: url('WhatsApp Image 2026-07-26 at 3.15.04 PM.jpeg');
+            background-size: cover;
+            background-position: center;
+            margin: 0 auto 15px;
+        }
+
+        .name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 5px;
+        }
+
+        .bio {
+            color: var(--text-grey);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        /* Emplacement Cartes / Liens */
+        .links-container {
+            padding: 0 20px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .link-card {
+            background-color: var(--bg-card);
+            color: var(--text-white);
+            text-decoration: none;
+            padding: 16px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Alignement avec les icônes */
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .link-card i {
+            font-size: 1.4rem;
+            width: 40px; /* Largeur fixe pour aligner le texte */
+            color: var(--primary-orange);
+            transition: all 0.3s ease;
+        }
+
+        .link-card span {
+            flex-grow: 1;
+            text-align: center;
+            padding-right: 40px; /* Compense la largeur de l'icône pour centrer le texte */
+        }
+
+        .link-card:hover {
+            background-color: var(--hover-orange);
+            color: var(--text-white);
+            transform: translateY(-3px);
+            border-color: var(--primary-orange);
+            box-shadow: 0 4px 12px rgba(255, 122, 0, 0.2);
+        }
+
+        .link-card:hover i {
+            color: var(--text-white);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Cover -->
+        <div class="cover-photo"></div>
+        
+        <!-- Profile & Logo -->
+        <div class="profile-section">
+            <div class="logo"></div>
+            <h1 class="name">Walid Kaddouri</h1>
+            <p class="bio">Commercial & Marketing Agent</p>
+        </div>
+
+        <!-- Contacts & Réseaux -->
+        <div class="links-container">
+            <!-- Téléphone -->
+            <a href="tel:0660718191" class="link-card">
+                <i class="fas fa-phone"></i>
+                <span>06 60 71 81 91</span>
+            </a>
+            
+            <!-- WhatsApp -->
+            <a href="https://wa.me/212660718191" class="link-card" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+            
+            <!-- Site Web -->
+            <a href="https://visiontap.online" class="link-card" target="_blank">
+                <i class="fas fa-globe"></i>
+                <span>Site Web</span>
+            </a>
+            
+            <!-- Instagram -->
+            <a href="https://instagram.com/agent_commercial_walid" class="link-card" target="_blank">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+            
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/share/1cZo9M5hwA/" class="link-card" target="_blank">
+                <i class="fab fa-facebook-f"></i>
+                <span>Facebook</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
