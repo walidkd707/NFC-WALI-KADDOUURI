@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Tap — Console Administrateur</title>
+    <!-- Police Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --bg-body: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --primary: #FF7A00;
+            --primary-gradient: linear-gradient(135deg, #FF9432 0%, #FF7A00 50%, #E05300 100%);
+            --primary-glow-strong: rgba(255, 122, 0, 0.25);
+            --primary-glow: rgba(255, 122, 0, 0.12);
+            --text-main: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --border-subtle: #E2E8F0;
+            --border-hover: rgba(255, 122, 0, 0.4);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 1.15rem;
+        }
+
+        .logo-symbol {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: var(--primary-gradient);
+            display: grid;
+            place-items: center;
+            box-shadow: 0 4px 12px var(--primary-glow-strong);
+        }
+
+        .admin-badge-top {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            background: rgba(15, 23, 42, 0.08);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            margin-left: 8px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-view-site {
+            padding: 8px 16px;
+            background: rgba(15, 23, 42, 0.04);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-view-site:hover {
+            background: rgba(15, 23, 42, 0.08);
+        }
+
+        .btn-logout {
+            padding: 8px 16px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-sm);
+            color: #EF4444;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-logout:hover {
+            background: #EF4444;
+            color: #FFFFFF;
+        }
+
+        /* --- ADMIN CONTENT --- */
+        .admin-wrapper {
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .admin-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .admin-header-row h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .admin-header-row p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* Table Card */
+        .table-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .table-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .search-box input {
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            background: #F8FAFC;
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+            min-width: 240px;
+        }
+
+        .search-box input:focus {
+            background: #FFFFFF;
+            border-color: var(--primary);
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: #F8FAFC;
+            color: var(--text-secondary);
+            font-weight: 700;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #FAFAFC;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #1E293B;
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: grid;
+            place-items: center;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .badge-template {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            background: #F1F5F9;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: capitalize;
+        }
+
+        .badge-scans {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: #ECFDF5;
+            color: #059669;
+        }
+
+        .btn-open-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            background: rgba(255, 122, 0, 0.08);
+            border: 1px solid rgba(255, 122, 0, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-open-link:hover {
+            background: var(--primary);
+            color: #FFFFFF;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .admin-wrapper {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SÉCURITÉ INSTANTANÉE -->
+    <script>
+        // Si l'utilisateur n'a pas tapé le mot de passe dans login.html, redirection directe
+        if (sessionStorage.getItem('vt_admin_auth') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <!-- HEADER ADMIN -->
+    <header>
+        <div class="nav-container">
+            <a href="admin.html" class="brand-logo">
+                <div class="logo-symbol">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5">
+                        <path d="M6 2L18 8L6 14L18 20L6 26"/>
+                        <path d="M2 10h.01"/>
+                        <path d="M2 14h.01"/>
+                    </svg>
+                </div>
+                <span>Vision Tap</span>
+                <span class="admin-badge-top">Admin Console</span>
+            </a>
+
+            <div class="nav-actions">
+                <a href="index.html" class="btn-view-site">Voir le site</a>
+                <button type="button" class="btn-logout" onclick="logoutAdmin()">Déconnexion</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-wrapper">
+        
+        <div class="admin-header-row">
+            <div>
+                <h1>Tableau de Bord Administrateur</h1>
+                <p>Gestion en direct des profils créés et stockés sur Supabase Cloud.</p>
+            </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Total Profils Créés</span>
+                <span class="stat-value" id="stat-total-profiles">0</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Total Scans & Taps NFC</span>
+                <span class="stat-value" id="stat-total-scans">0</span>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Statut Base de Données</span>
+                <span class="stat-value" style="color: #10B981; font-size: 1.5rem; display:flex; align-items:center; gap:8px;">
+                    <span style="width:10px; height:10px; border-radius:50%; background:#10B981;"></span> Connecté
+                </span>
+            </div>
+        </div>
+
+        <!-- TABLE DES PROFILS -->
+        <section class="table-section">
+            <div class="table-toolbar">
+                <h2 class="table-title">Liste des Profils Actifs</h2>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Rechercher par nom, email..." oninput="handleSearch()">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Titulaire</th>
+                            <th>Modèle</th>
+                            <th>Téléphone</th>
+                            <th>Scans NFC</th>
+                            <th>Lien Direct</th>
+                        </tr>
+                    </thead>
+                    <tbody id="profiles-tbody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                                Chargement des profils depuis Supabase...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- LOGIQUE SUPABASE -->
+    <script>
+        const SUPABASE_URL = "https://vbywltvaiqvixjdiztkr.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_eKDcZHQoK8y8l4wbrGeApA_w5-Wc6Vx";
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let allProfiles = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProfiles();
+        });
+
+        async function fetchProfiles() {
+            const tbody = document.getElementById('profiles-tbody');
+            
+            try {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allProfiles = data || [];
+                renderTable(allProfiles);
+                updateStats(allProfiles);
+
+            } catch (err) {
+                console.error("Erreur de chargement Supabase:", err);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #EF4444; padding: 24px;">
+                            Erreur de connexion à Supabase. Vérifiez que la table 'profiles' existe bien.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function renderTable(profiles) {
+            const tbody = document.getElementById('profiles-tbody');
+            
+            if (profiles.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                            Aucun profil enregistré pour le moment.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            profiles.forEach(p => {
+                const initials = p.name ? p.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : "VT";
+                const avatarStyle = p.photo ? `style="background-image: url('${p.photo}')"` : '';
+                const avatarTxt = p.photo ? '' : initials;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar" ${avatarStyle}>${avatarTxt}</div>
+                            <div>
+                                <strong style="display:block;">${p.name}</strong>
+                                <span style="font-size:0.78rem; color:var(--text-muted);">${p.profession || p.email || '-'}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge-template">${p.template || 'professional'}</span></td>
+                    <td><code>${p.phone || '-'}</code></td>
+                    <td><span class="badge-scans">${p.scans || 0} scans</span></td>
+                    <td>
+                        <a href="profile.html?p=${p.slug}" target="_blank" class="btn-open-link">
+                            Ouvrir ↗
+                        </a>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateStats(profiles) {
+            document.getElementById('stat-total-profiles').textContent = profiles.length;
+            const totalScans = profiles.reduce((sum, p) => sum + (p.scans || 0), 0);
+            document.getElementById('stat-total-scans').textContent = totalScans;
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allProfiles.filter(p => 
+                (p.name && p.name.toLowerCase().includes(query)) ||
+                (p.email && p.email.toLowerCase().includes(query)) ||
+                (p.profession && p.profession.toLowerCase().includes(query))
+            );
+            renderTable(filtered);
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('vt_admin_auth');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

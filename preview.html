@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Tap — Aperçu en Direct</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --bg-body: #FFFFFF; --bg-card: #FFFFFF; --primary: #FF7A00;
+            --primary-gradient: linear-gradient(135deg, #FF9432 0%, #FF7A00 50%, #E05300 100%);
+            --primary-glow-strong: rgba(255, 122, 0, 0.25); --primary-glow: rgba(255, 122, 0, 0.12);
+            --text-main: #0F172A; --text-secondary: #475569; --border-subtle: #E2E8F0;
+            --radius-md: 14px; --radius-xl: 28px; --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg-body); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; }
+        header { padding: 16px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; }
+        .preview-wrapper { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .btn-confirm { padding: 14px 28px; background: var(--primary-gradient); color: #fff; font-weight: 700; border-radius: 999px; text-decoration: none; border: none; cursor: pointer; display: inline-block; box-shadow: 0 4px 14px var(--primary-glow-strong); }
+        .phone-frame { width: 340px; min-height: 580px; background: #0F172A; border-radius: 40px; padding: 12px; margin: 0 auto; box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .phone-screen { background: #fff; width: 100%; min-height: 556px; border-radius: 30px; overflow-y: auto; padding: 20px 14px; text-align: center; }
+        .r-avatar { width: 75px; height: 75px; border-radius: 50%; background: #1E293B; color: #fff; display: grid; place-items: center; margin: 0 auto 12px; font-weight: 800; background-size: cover; }
+        .r-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+        .r-btn { padding: 10px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-decoration: none; color: #0F172A; }
+        @media(max-width: 800px){ .preview-wrapper { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <strong>VISION TAP</strong>
+        <a href="form.html" style="text-decoration:none; color:var(--text-secondary);">← Modifier</a>
+    </header>
+
+    <main class="preview-wrapper">
+        <div>
+            <h1 style="font-size:2.2rem; font-weight:800; margin-bottom:12px;">Aperçu Mobile en Direct</h1>
+            <p style="color:var(--text-secondary); margin-bottom:24px;">Voici comment apparaîtra votre profil une fois scanné par vos interlocuteurs.</p>
+            <button type="button" class="btn-confirm" onclick="goToSuccess()">Valider & Obtenir mon lien public →</button>
+        </div>
+
+        <div class="phone-frame">
+            <div class="phone-screen" id="preview-render">
+                <p>Chargement des données...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const SUPABASE_URL = "https://vbywltvaiqvixjdiztkr.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_eKDcZHQoK8y8l4wbrGeApA_w5-Wc6Vx";
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let currentSlug = new URLSearchParams(window.location.search).get('p');
+        let currentProfile = JSON.parse(localStorage.getItem('profileData')) || {};
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (currentSlug) {
+                const { data } = await supabase.from('profiles').select('*').eq('slug', currentSlug).single();
+                if (data) currentProfile = data;
+            }
+            renderMobileScreen(currentProfile);
+        });
+
+        function renderMobileScreen(p) {
+            const screen = document.getElementById('preview-render');
+            const initials = p.name ? p.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2) : "VT";
+            const avatarStyle = p.photo ? `style="background-image: url('${p.photo}')"` : '';
+            const avatarTxt = p.photo ? '' : initials;
+
+            screen.innerHTML = `
+                <div class="r-avatar" ${avatarStyle}>${avatarTxt}</div>
+                <h3 style="font-size:1.15rem; font-weight:800;">${p.name || 'Votre Nom'}</h3>
+                <p style="font-size:0.8rem; color:#FF7A00; font-weight:600;">${p.profession || 'Votre Titre'}</p>
+                <p style="font-size:0.75rem; color:#64748B; margin-top:2px;">${p.company || ''}</p>
+                <p style="font-size:0.8rem; color:#475569; margin-top:10px;">${p.description || ''}</p>
+
+                <div style="margin-top:20px; width:100%; padding:10px; background:#0F172A; color:#fff; border-radius:8px; font-size:0.8rem; font-weight:700;">
+                    💾 Enregistrer la fiche Contact
+                </div>
+
+                <div class="r-actions-grid">
+                    ${p.phone ? `<a href="tel:${p.phone}" class="r-btn">📞 Appel</a>` : ''}
+                    ${p.whatsapp ? `<a href="#" class="r-btn">💬 WhatsApp</a>` : ''}
+                    ${p.email ? `<a href="mailto:${p.email}" class="r-btn">✉ Email</a>` : ''}
+                    ${p.website ? `<a href="${p.website}" target="_blank" class="r-btn">🌐 Site</a>` : ''}
+                </div>
+            `;
+        }
+
+        function goToSuccess() {
+            window.location.href = `success.html?p=${currentProfile.slug || currentSlug || ''}`;
+        }
+    </script>
+</body>
+</html>

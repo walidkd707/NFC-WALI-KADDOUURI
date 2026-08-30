@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Tap — Choisir un Modèle</title>
+    <!-- Police Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #FFFFFF;
+            --bg-surface: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --primary: #FF7A00;
+            --primary-gradient: linear-gradient(135deg, #FF9432 0%, #FF7A00 50%, #E05300 100%);
+            --primary-glow-strong: rgba(255, 122, 0, 0.25);
+            --primary-glow: rgba(255, 122, 0, 0.12);
+            --text-main: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            --border-subtle: #E2E8F0;
+            --border-hover: rgba(255, 122, 0, 0.4);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            padding: 16px 24px;
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nav-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 1.15rem;
+        }
+
+        .logo-symbol {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: var(--primary-gradient);
+            display: grid;
+            place-items: center;
+            box-shadow: 0 4px 12px var(--primary-glow-strong);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .main-container {
+            max-width: 1240px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+        }
+
+        .header-title-area {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(255, 122, 0, 0.1);
+            border: 1px solid rgba(255, 122, 0, 0.2);
+            color: var(--primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0 auto;
+        }
+
+        .header-title-area h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .header-title-area p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* GRID DES MODÈLES */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-top: 10px;
+        }
+
+        .template-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+            position: relative;
+        }
+
+        .template-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-hover);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+        }
+
+        .preview-box {
+            height: 240px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Styles spécifiques aux previews */
+        .preview-box.pro {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+        }
+
+        .preview-box.creative {
+            background: linear-gradient(135deg, #180B26 0%, #3B0764 100%);
+        }
+
+        .preview-box.minimal {
+            background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+        }
+
+        .mini-card-mockup {
+            width: 175px;
+            height: 110px;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.25);
+            transition: var(--transition);
+        }
+
+        .template-card:hover .mini-card-mockup {
+            transform: scale(1.05);
+        }
+
+        .mini-card-mockup.dark {
+            background: #000000;
+            border: 1.5px solid rgba(255, 122, 0, 0.5);
+            color: #FFFFFF;
+        }
+
+        .mini-card-mockup.vibrant {
+            background: linear-gradient(135deg, #A855F7 0%, #EC4899 100%);
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            color: #FFFFFF;
+        }
+
+        .mini-card-mockup.clean {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-subtle);
+            color: #0F172A;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+        }
+
+        .card-body-content {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+        }
+
+        .template-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .template-desc {
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .template-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .btn-select {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: var(--primary-gradient);
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px var(--primary-glow-strong);
+            transition: var(--transition);
+        }
+
+        .btn-select:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(255, 122, 0, 0.4);
+        }
+
+        .btn-preview-live {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            background: rgba(15, 23, 42, 0.04);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 999px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-preview-live:hover {
+            background: rgba(15, 23, 42, 0.08);
+            color: var(--text-main);
+        }
+
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+            padding: 30px 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .secret-dot {
+            cursor: default;
+            user-select: none;
+        }
+
+        @media (max-width: 900px) {
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            .header-title-area h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER SANS BOUTON ADMIN -->
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo">
+                <div class="logo-symbol">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L18 8L6 14L18 20L6 26"/>
+                        <path d="M2 10h.01"/>
+                        <path d="M2 14h.01"/>
+                    </svg>
+                </div>
+                <span>Vision Tap</span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Accueil</a>
+                <a href="index.html#features" class="nav-link">Avantages</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <div class="header-title-area">
+            <span class="header-badge">Étape 1 sur 2</span>
+            <h1>Choisissez votre Style de Carte</h1>
+            <p>Sélectionnez le modèle qui reflète le mieux votre activité et votre identité visuelle.</p>
+        </div>
+
+        <div class="templates-grid">
+            
+            <!-- MODÈLE 1 : PROFESSIONAL (DARK ELEGANT) -->
+            <div class="template-card">
+                <div class="preview-box pro">
+                    <div class="mini-card-mockup dark">
+                        <span style="font-size: 0.65rem; font-weight: 800; color:#FF9432;">VISION TAP</span>
+                        <div>
+                            <div style="font-size: 0.68rem; font-weight: 700;">Professional Dark</div>
+                            <div style="font-size: 0.55rem; color:#94A3B8;">Cadre & Dirigeant</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-content">
+                    <h2 class="template-title">Professional Dark</h2>
+                    <p class="template-desc">Un design sombre, haut de gamme et raffiné. Idéal pour les directeurs, consultants, avocats et profils business.</p>
+                    <div class="template-actions">
+                        <a href="form.html?template=professional" class="btn-select">Choisir ce modèle →</a>
+                        <a href="profile.html?preview=professional" target="_blank" class="btn-preview-live">Aperçu du profil ↗</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODÈLE 2 : CREATIVE (VIBRANT GRADIENT) -->
+            <div class="template-card">
+                <div class="preview-box creative">
+                    <div class="mini-card-mockup vibrant">
+                        <span style="font-size: 0.65rem; font-weight: 800; color:#FFFFFF;">VISION TAP</span>
+                        <div>
+                            <div style="font-size: 0.68rem; font-weight: 700;">Creative Gradient</div>
+                            <div style="font-size: 0.55rem; color:rgba(255,255,255,0.8);">Design & Digital</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-content">
+                    <h2 class="template-title">Creative Gradient</h2>
+                    <p class="template-desc">Des dégradés modernes et dynamiques aux finitions percutantes. Parfait pour les créateurs de contenu, artistes et marketeurs.</p>
+                    <div class="template-actions">
+                        <a href="form.html?template=creative" class="btn-select">Choisir ce modèle →</a>
+                        <a href="profile.html?preview=creative" target="_blank" class="btn-preview-live">Aperçu du profil ↗</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODÈLE 3 : MINIMAL (CLEAN LIGHT) -->
+            <div class="template-card">
+                <div class="preview-box minimal">
+                    <div class="mini-card-mockup clean">
+                        <span style="font-size: 0.65rem; font-weight: 800; color:#0F172A;">VISION TAP</span>
+                        <div>
+                            <div style="font-size: 0.68rem; font-weight: 700;">Minimal Light</div>
+                            <div style="font-size: 0.55rem; color:#64748B;">Épuré & Précis</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body-content">
+                    <h2 class="template-title">Minimal Light</h2>
+                    <p class="template-desc">Un style épuré sur fond clair, axé sur la clarté maximale de vos coordonnées. Idéal pour les architectes, médecins et profils corporate.</p>
+                    <div class="template-actions">
+                        <a href="form.html?template=minimal" class="btn-select">Choisir ce modèle →</a>
+                        <a href="profile.html?preview=minimal" target="_blank" class="btn-preview-live">Aperçu du profil ↗</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Vision Tap<span class="secret-dot" onclick="handleSecretAdmin()">.</span> Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // TRIPLE CLIC SECRET SUR LE POINT DU FOOTER POUR OUVRIR L'ADMIN
+        let clickCount = 0;
+        let clickTimer = null;
+        function handleSecretAdmin() {
+            clickCount++;
+            clearTimeout(clickTimer);
+            if (clickCount >= 3) {
+                window.location.href = 'login.html';
+                clickCount = 0;
+            }
+            clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+        }
+    </script>
+</body>
+</html>

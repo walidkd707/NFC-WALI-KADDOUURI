@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Tap — Profil NFC</title>
+    <!-- Police Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* --- MASTER PALETTE MODE CLAIR --- */
+            --bg-body: #FFFFFF;
+            --bg-surface: #F8FAFC;
+            --bg-card: #FFFFFF;
+            
+            --primary: #FF7A00;
+            --primary-gradient: linear-gradient(135deg, #FF9432 0%, #FF7A00 50%, #E05300 100%);
+            --primary-glow: rgba(255, 122, 0, 0.12);
+            --primary-glow-strong: rgba(255, 122, 0, 0.25);
+            
+            --text-main: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #94A3B8;
+            
+            --border-subtle: #E2E8F0;
+            --border-hover: rgba(255, 122, 0, 0.4);
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+            
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #F1F5F9;
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 122, 0, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* --- PROFILE VIEW CONTAINER --- */
+        .profile-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background: #FFFFFF;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- THEME 1 : BUSINESS --- */
+        .view-business {
+            padding: 40px 24px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .view-business .p-avatar {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: #1E293B;
+            color: #FFFFFF;
+            display: grid;
+            place-items: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 18px;
+            background-size: cover;
+            background-position: center;
+            border: 4px solid #FFFFFF;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        }
+
+        .view-business .p-name {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin-bottom: 4px;
+        }
+
+        .view-business .p-title {
+            font-size: 0.95rem;
+            color: #64748B;
+            margin-bottom: 4px;
+        }
+
+        .view-business .p-company {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .view-business .p-bio {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .btn-vcard-main {
+            width: 100%;
+            padding: 14px;
+            background: #0F172A;
+            color: #FFFFFF;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 24px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+            transition: var(--transition);
+        }
+
+        .btn-vcard-main:hover {
+            background: #1E293B;
+            transform: translateY(-2px);
+        }
+
+        .biz-contact-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .biz-contact-item {
+            font-size: 0.9rem;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            transition: var(--transition);
+            word-break: break-all;
+        }
+
+        .biz-contact-item:hover {
+            border-color: var(--border-hover);
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        /* --- THEME 2 : PROFESSIONAL --- */
+        .view-professional {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .view-professional .pro-banner {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(120deg, #FFF0E0 0%, #FFD6AF 100%);
+            border-bottom: 1px solid #FFE0C5;
+        }
+
+        .view-professional .pro-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 20px;
+            background: #FFFFFF;
+            border: 4px solid #FFFFFF;
+            margin-top: -45px;
+            margin-bottom: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+            display: grid;
+            place-items: center;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.6rem;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .view-professional .pro-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0F172A;
+            text-align: center;
+        }
+
+        .view-professional .pro-title {
+            font-size: 0.92rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .view-professional .pro-company {
+            font-size: 0.85rem;
+            color: #64748B;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .view-professional .pro-bio {
+            font-size: 0.9rem;
+            color: #475569;
+            padding: 0 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .pro-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            padding: 0 24px 20px;
+        }
+
+        .pro-action-btn {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: var(--radius-md);
+            padding: 14px 10px;
+            text-align: center;
+            font-size: 0.88rem;
+            color: #1E293B;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .pro-action-btn:hover {
+            border-color: var(--border-hover);
+            background: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .pro-cta-primary {
+            width: calc(100% - 48px);
+            margin: 0 24px 24px;
+            padding: 14px;
+            background: var(--primary-gradient);
+            color: #FFFFFF;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 14px var(--primary-glow-strong);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pro-cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.5);
+        }
+
+        /* --- THEME 3 : CREATOR --- */
+        .view-creator {
+            padding: 24px 20px;
+            background: #FAF5FF;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .creator-profile-card {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 24px 20px;
+            background: #FFFFFF;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+
+        .creator-avatar-ring {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #FF7A00, #A855F7, #00D1FF);
+            padding: 4px;
+            margin-bottom: 12px;
+        }
+
+        .creator-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #FFFFFF;
+            display: grid;
+            place-items: center;
+            font-size: 1.8rem;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .creator-name {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #0F172A;
+            letter-spacing: -0.02em;
+        }
+
+        .creator-handle {
+            font-size: 0.88rem;
+            color: #A855F7;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .creator-bio {
+            font-size: 0.9rem;
+            color: #64748B;
+            line-height: 1.5;
+        }
+
+        .creator-links-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .creator-link-item {
+            width: 100%;
+            background: #FFFFFF;
+            border: 1px solid #E9D5FF;
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .creator-link-item:hover {
+            border-color: #D8B4FE;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(168, 85, 247, 0.15);
+        }
+
+        .creator-link-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #1E293B;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .creator-link-arrow {
+            font-size: 1rem;
+            color: #A855F7;
+            font-weight: 800;
+        }
+
+        /* --- FOOTER BRANDING --- */
+        .profile-footer {
+            padding: 24px;
+            text-align: center;
+            margin-top: auto;
+            border-top: 1px solid var(--border-subtle);
+            background: rgba(248, 250, 252, 0.8);
+        }
+
+        .profile-footer a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .profile-footer a:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <div class="profile-wrapper">
+        <div id="profile-target">
+            <!-- Injecté par JavaScript en temps réel -->
+        </div>
+
+        <!-- FOOTER DISCRET -->
+        <div class="profile-footer">
+            <a href="index.html">
+                <span>Créé avec <strong>Vision Tap</strong> ⚡</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- SCRIPT PROFILE & GENERATION VCARD -->
+    <script>
+        // 1. Récupération des données du profil
+        const raw = localStorage.getItem('profileData');
+        const profile = raw ? JSON.parse(raw) : {
+            name: "Walid Kaddouri",
+            profession: "Directeur Commercial & Stratégie",
+            company: "Vision Tap",
+            description: "Spécialiste de la transformation digitale et du networking intelligent sans contact.",
+            photo: "",
+            phone: "+212 6 12 34 56 78",
+            whatsapp: "+212 6 12 34 56 78",
+            email: "contact@visiontap.ma",
+            address: "Casablanca, Maroc",
+            website: "https://visiontap.ma",
+            linkedin: "https://linkedin.com",
+            instagram: "https://instagram.com",
+            booking: "https://calendly.com",
+            template: "professional"
+        };
+
+        const template = profile.template || localStorage.getItem('selectedTemplate') || 'professional';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProfile(template);
+        });
+
+        function getInitials(name) {
+            if (!name) return "VT";
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        }
+
+        // 2. Rendu de la page selon le template choisi
+        function renderProfile(tpl) {
+            const target = document.getElementById('profile-target');
+            const initials = getInitials(profile.name);
+            const avatarStyle = profile.photo ? `style="background-image: url('${profile.photo}')"` : '';
+            const avatarText = profile.photo ? '' : initials;
+
+            if (tpl === 'business') {
+                target.innerHTML = `
+                    <div class="view-business">
+                        <div class="p-avatar" ${avatarStyle}>${avatarText}</div>
+                        <h1 class="p-name">${profile.name}</h1>
+                        <div class="p-title">${profile.profession}</div>
+                        ${profile.company ? `<div class="p-company">${profile.company}</div>` : ''}
+                        ${profile.description ? `<p class="p-bio">${profile.description}</p>` : ''}
+
+                        <button type="button" class="btn-vcard-main" onclick="downloadVCard()">
+                            💾 Enregistrer le contact
+                        </button>
+
+                        <div class="biz-contact-list">
+                            ${profile.phone ? `<a href="tel:${profile.phone}" class="biz-contact-item">📞 Appeler : ${profile.phone}</a>` : ''}
+                            ${profile.whatsapp ? `<a href="https://wa.me/${profile.whatsapp.replace(/\D/g, '')}" target="_blank" class="biz-contact-item">💬 WhatsApp</a>` : ''}
+                            ${profile.email ? `<a href="mailto:${profile.email}" class="biz-contact-item">✉ Email : ${profile.email}</a>` : ''}
+                            ${profile.website ? `<a href="${profile.website}" target="_blank" class="biz-contact-item">🌐 Site Web : ${profile.website}</a>` : ''}
+                            ${profile.linkedin ? `<a href="${profile.linkedin}" target="_blank" class="biz-contact-item">💼 LinkedIn</a>` : ''}
+                            ${profile.address ? `<div class="biz-contact-item">📍 ${profile.address}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            } else if (tpl === 'creator') {
+                target.innerHTML = `
+                    <div class="view-creator">
+                        <div class="creator-profile-card">
+                            <div class="creator-avatar-ring">
+                                <div class="creator-avatar-inner" ${avatarStyle}>${avatarText}</div>
+                            </div>
+                            <h1 class="creator-name">${profile.name}</h1>
+                            <div class="creator-handle">@${(profile.name || 'profil').toLowerCase().replace(/\s+/g, '_')}</div>
+                            ${profile.description ? `<p class="creator-bio">${profile.description}</p>` : ''}
+                        </div>
+
+                        <div class="creator-links-list">
+                            <button type="button" class="creator-link-item" onclick="downloadVCard()" style="cursor: pointer; border: 1px solid #FF7A00;">
+                                <span class="creator-link-title">💾 Enregistrer dans mes contacts</span>
+                                <span class="creator-link-arrow">↓</span>
+                            </button>
+                            ${profile.phone ? `<a href="tel:${profile.phone}" class="creator-link-item"><span class="creator-link-title">📞 M'appeler directement</span><span class="creator-link-arrow">→</span></a>` : ''}
+                            ${profile.whatsapp ? `<a href="https://wa.me/${profile.whatsapp.replace(/\D/g, '')}" target="_blank" class="creator-link-item"><span class="creator-link-title">💬 Message WhatsApp</span><span class="creator-link-arrow">→</span></a>` : ''}
+                            ${profile.website ? `<a href="${profile.website}" target="_blank" class="creator-link-item"><span class="creator-link-title">🌐 Mon Site Web</span><span class="creator-link-arrow">→</span></a>` : ''}
+                            ${profile.instagram ? `<a href="${profile.instagram}" target="_blank" class="creator-link-item"><span class="creator-link-title">📸 Mon Instagram</span><span class="creator-link-arrow">→</span></a>` : ''}
+                            ${profile.linkedin ? `<a href="${profile.linkedin}" target="_blank" class="creator-link-item"><span class="creator-link-title">💼 Mon Profil LinkedIn</span><span class="creator-link-arrow">→</span></a>` : ''}
+                            ${profile.booking ? `<a href="${profile.booking}" target="_blank" class="creator-link-item"><span class="creator-link-title">📅 Prendre Rendez-vous</span><span class="creator-link-arrow">→</span></a>` : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Modèle PROFESSIONAL (Par défaut)
+                target.innerHTML = `
+                    <div class="view-professional">
+                        <div class="pro-banner"></div>
+                        <div class="pro-avatar" ${avatarStyle}>${avatarText}</div>
+                        <h1 class="pro-name">${profile.name}</h1>
+                        <div class="pro-title">${profile.profession}</div>
+                        ${profile.company ? `<div class="pro-company">${profile.company}</div>` : ''}
+                        ${profile.description ? `<p class="pro-bio">${profile.description}</p>` : ''}
+
+                        <button type="button" class="pro-cta-primary" onclick="downloadVCard()">
+                            💾 Enregistrer le contact (vCard)
+                        </button>
+
+                        <div class="pro-actions-grid">
+                            ${profile.phone ? `<a href="tel:${profile.phone}" class="pro-action-btn">📞 Appel</a>` : ''}
+                            ${profile.whatsapp ? `<a href="https://wa.me/${profile.whatsapp.replace(/\D/g, '')}" target="_blank" class="pro-action-btn">💬 WhatsApp</a>` : ''}
+                            ${profile.email ? `<a href="mailto:${profile.email}" class="pro-action-btn">✉ Email</a>` : ''}
+                            ${profile.linkedin ? `<a href="${profile.linkedin}" target="_blank" class="pro-action-btn">💼 LinkedIn</a>` : ''}
+                            ${profile.website ? `<a href="${profile.website}" target="_blank" class="pro-action-btn" style="grid-column: span 2;">🌐 ${profile.website}</a>` : ''}
+                        </div>
+
+                        ${profile.booking ? `<a href="${profile.booking}" target="_blank" class="pro-cta-primary" style="background: #0F172A; box-shadow: none;">📅 Réserver un créneau</a>` : ''}
+                    </div>
+                `;
+            }
+        }
+
+        // 3. Moteur de génération du fichier vCard (.vcf) natif
+        function downloadVCard() {
+            const names = (profile.name || "Contact").split(" ");
+            const firstName = names[0] || "";
+            const lastName = names.slice(1).join(" ") || "";
+
+            const vCardContent = [
+                "BEGIN:VCARD",
+                "VERSION:3.0",
+                `N:${lastName};${firstName};;;`,
+                `FN:${profile.name || 'Contact'}`,
+                profile.company ? `ORG:${profile.company};` : "",
+                profile.profession ? `TITLE:${profile.profession}` : "",
+                profile.phone ? `TEL;TYPE=CELL,VOICE:${profile.phone}` : "",
+                profile.email ? `EMAIL;TYPE=WORK,INTERNET:${profile.email}` : "",
+                profile.website ? `URL:${profile.website}` : "",
+                profile.address ? `ADR;TYPE=WORK:;;${profile.address};;;;` : "",
+                profile.description ? `NOTE:${profile.description}` : "",
+                "END:VCARD"
+            ].filter(Boolean).join("\r\n");
+
+            const blob = new Blob([vCardContent], { type: "text/vcard;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${(profile.name || "contact").toLowerCase().replace(/\s+/g, "_")}.vcf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

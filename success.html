@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Tap — Profil Prêt</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F8FAFC; color: #0F172A; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; margin: 0; }
+        .card { background: #fff; border: 1px solid #E2E8F0; border-radius: 24px; padding: 36px; max-width: 500px; width: 100%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .link-box { background: #F8FAFC; padding: 12px; border: 1px solid #E2E8F0; border-radius: 10px; font-family: monospace; font-size: 0.9rem; margin: 20px 0; word-break: break-all; }
+        .btn { display: block; width: 100%; padding: 14px; background: linear-gradient(135deg, #FF9432 0%, #FF7A00 100%); color: #fff; font-weight: 700; border-radius: 999px; text-decoration: none; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div style="font-size:2.5rem; margin-bottom:10px;">⚡</div>
+        <h1 style="font-size:1.6rem; font-weight:800; margin-bottom:8px;">Profil NFC Activé !</h1>
+        <p style="color:#64748B; font-size:0.9rem;">Votre profil est stocké en ligne sur Supabase et accessible via ce lien :</p>
+        
+        <div class="link-box" id="public-link">Chargement...</div>
+
+        <a id="btn-view" href="profile.html" class="btn">Voir mon profil en direct</a>
+    </div>
+
+    <script>
+        const slug = new URLSearchParams(window.location.search).get('p');
+        const baseUrl = window.location.origin + window.location.pathname.replace('success.html', 'profile.html');
+        const finalUrl = slug ? `${baseUrl}?p=${slug}` : `${baseUrl}`;
+
+        document.getElementById('public-link').textContent = finalUrl;
+        document.getElementById('btn-view').href = finalUrl;
+    </script>
+</body>
+</html>

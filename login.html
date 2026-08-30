@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Tap — Connexion Admin</title>
+    <!-- Police Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #F8FAFC;
+            --primary: #FF7A00;
+            --primary-gradient: linear-gradient(135deg, #FF9432 0%, #FF7A00 50%, #E05300 100%);
+            --primary-glow-strong: rgba(255, 122, 0, 0.25);
+            --primary-glow: rgba(255, 122, 0, 0.12);
+            --text-main: #0F172A;
+            --text-secondary: #475569;
+            --border-subtle: #E2E8F0;
+            --radius-md: 14px;
+            --radius-xl: 28px;
+            --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 650px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 122, 0, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 1;
+            background: #FFFFFF;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 40px 32px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05);
+            text-align: center;
+        }
+
+        .brand-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo-symbol {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--primary-gradient);
+            display: grid;
+            place-items: center;
+            box-shadow: 0 4px 12px var(--primary-glow-strong);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .login-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 26px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #F8FAFC;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 0.92rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.12);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-gradient);
+            color: #FFFFFF;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px var(--primary-glow-strong);
+            transition: var(--transition);
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 122, 0, 0.4);
+        }
+
+        .error-msg {
+            color: #EF4444;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 14px;
+            display: none;
+            padding: 10px;
+            background: #FEF2F2;
+            border-radius: 8px;
+            border: 1px solid #FCA5A5;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <div class="login-card">
+        <a href="index.html" class="brand-logo">
+            <div class="logo-symbol">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L18 8L6 14L18 20L6 26"/>
+                    <path d="M2 10h.01"/>
+                    <path d="M2 14h.01"/>
+                </svg>
+            </div>
+            <span>Vision Tap</span>
+        </a>
+
+        <h1 class="login-title">Accès Administrateur</h1>
+        <p class="login-desc">Connectez-vous avec vos identifiants pour gérer les profils.</p>
+
+        <form id="admin-login-form" onsubmit="handleDirectAuth(event)">
+            <div class="input-group">
+                <label for="login-email">Email Admin</label>
+                <input type="email" id="login-email" placeholder="admin@domaine.com" required autofocus>
+            </div>
+
+            <div class="input-group">
+                <label for="login-pass">Mot de passe</label>
+                <input type="password" id="login-pass" placeholder="••••••••••••" required>
+            </div>
+
+            <button type="submit" id="btn-submit" class="btn-submit">Se connecter</button>
+            <div id="error-box" class="error-msg">Email ou mot de passe incorrect.</div>
+        </form>
+
+        <a href="index.html" class="back-link">← Retour au site public</a>
+    </div>
+
+    <script>
+        const ADMIN_EMAIL = "visiontap.cantact@gmail.com";
+        const ADMIN_PASS = "123@123admin";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('vt_admin_auth') === 'true') {
+                window.location.href = 'admin.html';
+            }
+        });
+
+        function handleDirectAuth(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
+            const passInput = document.getElementById('login-pass').value.trim();
+            const errorBox = document.getElementById('error-box');
+
+            if (emailInput === ADMIN_EMAIL.toLowerCase() && passInput === ADMIN_PASS) {
+                sessionStorage.setItem('vt_admin_auth', 'true');
+                sessionStorage.setItem('vt_admin_email', emailInput);
+                window.location.href = 'admin.html';
+            } else {
+                errorBox.style.display = 'block';
+                document.getElementById('login-pass').value = '';
+                document.getElementById('login-pass').focus();
+            }
+        }
+    </script>
+</body>
+</html>
